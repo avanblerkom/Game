@@ -8,6 +8,7 @@ public class Game {
     private static String currentLocation = "start";
     private static Integer sticks = 0;
     private static Integer goldkey = 0; // Track the number of golden keys
+    private static Integer goldenstick = 0; // Track the number of golden sticks
     private static boolean gotStickFromSprayonse = false; // Track if stick was received from Sprayoncé
 
     // Strings from combined_data.json
@@ -150,24 +151,37 @@ public class Game {
             while (true) {
                 Location location = getLocationByName(currentLocation);
                 if (location != null) {
-                    System.out.println("\n" + location.getText());
+                    System.out.println("\n" + "=".repeat(40)); // Add a separator
+                    System.out.println(location.getText()); // Display the location story
+                    System.out.println("=".repeat(40)); // Add a separator
                     displayChoices(location.getChoices());
 
+                    System.out.print("\n> "); // Add a prompt for user input
                     String userInput = scanner.nextLine().trim().toLowerCase();
 
                     if (userInput.equals("quit")) {
-                        System.out.println("Thanks for playing!");
+                        System.out.println("\n👋 Thanks for playing! Goodbye!");
                         break;
                     } else if (userInput.equals("inventory")) {
+                        System.out.println("\n=== Inventory ===");
                         System.out.print("You have " + sticks + " sticks.");
                         if (goldkey > 0) {
-                            System.out.println(" You also have " + goldkey + " golden key.");
+                            System.out.print(" You also have " + goldkey + " golden key(s).");
+                        }
+                        if (goldenstick > 0) {
+                            System.out.println(" You also have " + goldenstick + " golden stick(s).");
                         } else {
                             System.out.println();
                         }
                         continue;
                     } else if (userInput.equals("help")) {
-                        System.out.println("Commands: 'inventory', 'quit', 'help'");
+                        System.out.println("\n=== Help Menu ===");
+                        System.out.println("Commands:");
+                        System.out.println("- Type the number corresponding to your choice.");
+                        System.out.println("- Type the answer to the puzzles when prompted or type 'hint' for a clue.");
+                        System.out.println("- Type 'inventory' to check your inventory.");
+                        System.out.println("- Type 'help' to display this menu.");
+                        System.out.println("- Type 'quit' to exit the game.");
                         continue;
                     }
 
@@ -182,70 +196,86 @@ public class Game {
                                 if (!gotStickFromSprayonse) {
                                     sticks++;
                                     gotStickFromSprayonse = true;
-                                    System.out.println("Sprayoncé gives you a stick! You now have " + sticks + " sticks.");
+                                    System.out.println("\n🎉 Sprayoncé gives you a stick! You now have " + sticks + " sticks.");
                                 } else {
-                                    System.out.println("Sprayoncé has already helped you. She can't give you another stick.");
+                                    System.out.println("\n❌ Sprayoncé has already helped you. She can't give you another stick.");
                                 }
                             }
 
                             // Handle golden key collection
                             if (nextLoc.equals("find_key")) {
                                 goldkey++;
-                                System.out.println("You found a golden key! You now have " + goldkey + " golden key(s).");
+                                System.out.println("\n🎉 You found a golden key! You now have " + goldkey + " golden key(s).");
                             }
 
                             // Enforce stick requirement for "dam_complete"
-                            if (nextLoc.equals("dam_complete") && sticks < 4) {
-                                System.out.println("You need at least 4 sticks to complete the dam. Search for more materials.");
-                                continue;
+                            if (nextLoc.equals("dam_complete")) {
+                                if (sticks >= 4) {
+                                    if (goldenstick > 0) { // Check if the player has a golden stick
+                                        System.out.println("\n🎉 You have enough sticks to complete the dam! It shines brilliantly in the sunlight, all thanks to that nifty golden stick you found. What a place to live!");
+                                    } else {
+                                        System.out.println("\n🎉 You have enough sticks to complete the dam! It is sturdy and well-built, but you note that it could be shinier...");
+                                    }
+                                    System.out.println("\n" + "=".repeat(100));
+                                    System.out.println(damCompleteStory); // Print the congratulations message
+                                    System.out.println("=" + "=".repeat(100));
+                                    System.out.println("\n👋 Thanks for playing! Goodbye!");
+                                    break; // Exit the game after building the dam
+                                } else {
+                                    System.out.println("\n❌ You need at least 4 sticks to complete the dam. Search for more materials.");
+                                    continue;
+                                }
                             }
 
                             // Handle chest opening logic
                             if (nextLoc.equals("open_chest")) {
                                 if (goldkey > 0) {
                                     goldkey--; // Use the golden key
-                                    System.out.println("You use the golden key to open the chest. Inside, you find a golden stick!");
+                                    goldenstick++; // Add a golden stick to the inventory
+                                    System.out.println("\n🔓 You use the golden key to open the chest. Inside, you find a golden stick!");
                                     currentLocation = nextLoc;
                                 } else {
-                                    System.out.println("The chest is locked but it looks like there is a keyhole. Perhaps you should search elsewhere.");
+                                    System.out.println("\n❌ The chest is locked but it looks like there is a keyhole. Perhaps you should search elsewhere.");
                                     continue; // Prevent moving to the next location
                                 }
                             }
 
                             if (puzzles.containsKey(nextLoc)) {
                                 currentLocation = nextLoc; // Update currentLocation first
-                                System.out.println("\n" + getLocationByName(currentLocation).getText()); // Print the story for the location
+                                System.out.println("\n" + "=".repeat(40)); // Add a separator
+                                System.out.println(getLocationByName(currentLocation).getText()); // Print the story for the location
+                                System.out.println("=".repeat(40)); // Add a separator
                                 Puzzle puzzle = puzzles.get(nextLoc);
-                                System.out.println("\nPuzzle: " + puzzle.getRiddle());
+                                System.out.println("\n🧩 Puzzle: " + puzzle.getRiddle());
                                 System.out.println("Type 'hint' for a clue.");
 
                                 while (true) {
-                                    System.out.print("Your answer: ");
+                                    System.out.print("\nYour answer: ");
                                     String answer = scanner.nextLine().trim();
                                     if (answer.equalsIgnoreCase("hint")) {
-                                        System.out.println("Hint: " + puzzle.getHint());
+                                        System.out.println("\n💡 Hint: " + puzzle.getHint());
                                     } else if (puzzle.isCorrect(answer)) {
-                                        System.out.println("Correct! You may proceed.");
+                                        System.out.println("\n✅ Correct! You may proceed.");
                                         sticks++;
-                                        System.out.println("You now have " + sticks + " sticks.");
+                                        System.out.println("🎉 You now have " + sticks + " sticks.");
                                         currentLocation = nextLoc; 
                                         puzzles.remove(nextLoc);
                                         break;
                                     } else {
-                                        System.out.println("Wrong answer. Try again or type 'hint'.");
+                                        System.out.println("\n❌ Wrong answer. Try again or type 'hint'.");
                                     }
                                 }
                             } else {
                                 currentLocation = nextLoc;
                             }
                         } else {
-                            System.out.println("Invalid input. Please enter a valid number or type 'help' for other commands.");
+                            System.out.println("\n❌ Invalid input. Please enter a valid number or type 'help' for other commands.");
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number or type 'help' for other commands.");
+                        System.out.println("\n❌ Invalid input. Please enter a valid number or type 'help' for other commands.");
                     }
                 } else {
-                    System.out.println("Location not found.");
+                    System.out.println("\n❌ Location not found.");
                     break;
                 }
             }
