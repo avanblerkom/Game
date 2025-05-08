@@ -2,14 +2,18 @@ package Game;
 
 import java.util.*;
 
+/**
+ * Represents the main class for the game, managing locations, puzzles, and game state.
+ */
 public class Game {
-    private static List<Location> locations = new ArrayList<>();
-    private static Map<String, Puzzle> puzzles = new HashMap<>();
-    private static String currentLocation = "start";
-    private static Integer sticks = 0;
-    private static Integer goldkey = 0; // Track the number of golden keys
-    private static Integer goldenstick = 0; // Track the number of golden sticks
-    private static boolean gotStickFromSprayonse = false; // Track if stick was received from Sprayoncé
+    private static List<Location> locations = new ArrayList<>(); // List of all locations in the game
+    private static Map<String, Puzzle> puzzles = new HashMap<>(); // Map of puzzles by location name
+    private static String currentLocation = "start"; // The current location of the player
+    private static Integer sticks = 0; // Number of sticks collected
+    private static Integer goldkey = 0; // Number of golden keys collected
+    private static Integer goldenstick = 0; // Number of golden sticks collected
+    private static boolean gotStickFromSprayonse = false; // Tracks if Sprayoncé has given a stick
+    private static Set<String> collectedKeys = new HashSet<>(); // Tracks locations where keys have been collected
 
     // Strings from combined_data.json
     public static final String startStory = "You are Justin the Beaver, standing at the edge of a still pond. The wilderness stretches out before you, filled with opportunities and dangers. What will you do at the pond?";
@@ -103,7 +107,7 @@ public class Game {
         Location damCompleteLocation = new Location("dam_complete", damCompleteStory, new ArrayList<>());
         Location openChestLocation = new Location(
             "open_chest",
-            "", // No predefined story
+            "", 
             new ArrayList<>(List.of(new Choice("Go back to the mountain path.", "mountain_path")))
         );
 
@@ -114,8 +118,8 @@ public class Game {
         locations.add(upstreamLocation);
         locations.add(riverLocation);
         locations.add(startLocation);
-        locations.add(forestLocation); // Add forest to the list
-        locations.add(deepForestLocation); // Add deep forest to the list
+        locations.add(forestLocation); 
+        locations.add(deepForestLocation); 
         locations.add(findKeyLocation);
         locations.add(gatherMaterialsLocation);
         locations.add(talkSprayonseLocation);
@@ -151,14 +155,15 @@ public class Game {
             while (true) {
                 Location location = getLocationByName(currentLocation);
                 if (location != null) {
-                    System.out.println("\n" + "=".repeat(40)); // Add a separator
+                    System.out.println("\n" + "=".repeat(100)); // Add a separator
                     System.out.println(location.getText()); // Display the location story
-                    System.out.println("=".repeat(40)); // Add a separator
+                    System.out.println("=".repeat(100)); // Add a separator
                     displayChoices(location.getChoices());
 
                     System.out.print("\n> "); // Add a prompt for user input
                     String userInput = scanner.nextLine().trim().toLowerCase();
 
+                    // Handle global commands
                     if (userInput.equals("quit")) {
                         System.out.println("\n👋 Thanks for playing! Goodbye!");
                         break;
@@ -185,6 +190,7 @@ public class Game {
                         continue;
                     }
 
+                    // Handle location-specific commands
                     try {
                         int choiceIndex = Integer.parseInt(userInput) - 1;
                         List<Choice> choices = location.getChoices();
@@ -204,8 +210,13 @@ public class Game {
 
                             // Handle golden key collection
                             if (nextLoc.equals("find_key")) {
-                                goldkey++;
-                                System.out.println("\n🎉 You found a golden key! You now have " + goldkey + " golden key(s).");
+                                if (!collectedKeys.contains(nextLoc)) {
+                                    goldkey++;
+                                    collectedKeys.add(nextLoc); // Mark the location as having its key collected
+                                    System.out.println("\n🎉 You found a golden key! You now have " + goldkey + " golden key(s).");
+                                } else {
+                                    System.out.println("\n❌ You have already collected the golden key from this location.");
+                                }
                             }
 
                             // Enforce stick requirement for "dam_complete"
@@ -282,16 +293,27 @@ public class Game {
         }
     }
 
+    /**
+     * Gets a location by its name.
+     *
+     * @param name The name of the location.
+     * @return The Location object, or null if not found.
+     */
     private static Location getLocationByName(String name) {
         for (Location location : locations) {
             if (location.getName().equalsIgnoreCase(name)) {
                 return location;
             }
         }
-        System.out.println("DEBUG: Location '" + name + "' not found."); // Add debug log
+        System.out.println("DEBUG: Location '" + name + "' not found."); // Debug log
         return null;
     }
 
+    /**
+     * Displays the list of choices available at the current location.
+     *
+     * @param choices The list of choices.
+     */
     private static void displayChoices(List<Choice> choices) {
         System.out.println("\nWhat would you like to do?");
         for (int i = 0; i < choices.size(); i++) {
