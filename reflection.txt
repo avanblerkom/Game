@@ -1,0 +1,113 @@
+# Architecture Diagram
+
++-----------------------------+         +-----------------------------+
+|            Game             |<------->|          Location           |
+|        (Main Class)         |         |                             |
++-----------------------------+         +-----------------------------+
+| - locations: List<Location> |         | - name: String              |
+| - puzzles: Map<String, Puzzle>|       | - text: String              |
+| - currentLocation: String   |         | - choices: List<Choice>     |
+| - sticks: Integer           |         +-----------------------------+
+| - goldkey: Integer          | < - - - - -      ^           ^
+| - goldenstick: Integer      |            |     |           |
+| - gotStickFromSprayonse: boolean|        |     |           |
++-----------------------------+            |     |           |
+         |                  - - - - - - - -|- - -            |           
+         |                 |               |                 |
+         v                 v               v                 v
++-----------------------------+         +-----------------------------+
+|           Choice            |<------->|           Puzzle            |
+|                             |         |                             |
++-----------------------------+         +-----------------------------+
+| - text: String              |         | - riddle: String            |
+| - nextLocation: String      |         | - solution: List<String>    |
++-----------------------------+         | - hint: String              |
+                                        | - nextLocation: String      |
+                                        +-----------------------------+
+
+^I am proud of how this looks. It took a while!
+
+# Relationships:
+1. Game <--> Location (Association):
+   - The Game class maintains a list of Location objects that represent the game world.
+   - Each Location contains a story and a list of choices.
+
+2. Location <--> Choice (Association):
+   - Each Location has a list of Choice objects that represent the decisions the player can make at that location.
+
+3. Game <--> Puzzle (Association):
+   - The Game class maintains a map of puzzles where the key is the location name and the value is the corresponding puzzle.
+
+4. Choice <--> Location (Association):
+   - Each Choice object links to another Location via the nextLocation property.
+
+5. Choice <--> Puzzle (Association):
+   - Some choices lead to puzzles creating a dependency between Choice and Puzzle.
+
+6. Generalization:
+   - There are no inheritance relationships in my game.
+
+7. Dependencies:
+   - The Game class depends on Location, Choice, and Puzzle to manage the game state, player choices and puzzles.
+
+---
+
+# Design Justification
+
+# Current Design
+The current design uses three main classes: Location, Choice, and Puzzle. These classes encapsulate the core elements of the game:
+- Location: Represents a place in the game world, containing a story and a list of choices.
+- Choice: Represents a decision the player can make, linking to another location.
+- Puzzle: Represents a challenge or riddle that the player must solve to progress.
+
+This modular design ensures that each class has a single responsibility, making the code easier to understand, maintain, and extend. For example, adding a new location or puzzle only requires creating new instances of these classes without modifying the existing logic.
+
+# Alternative Design
+3. Complexity: The GameNode class would become overly complex,and would need to handle both navigation logic and puzzle-solving logic.
+
+The current design was chosen for the following reasons:
+1. Modularity: Each class has a clear and focused purpose, making the code easier to understand and extend.
+2. Extensibility: New locations, choices, or puzzles can be added without modifying the existing classes.
+3. Maintenance: Bugs are easier to isolate and fix because the responsibilities of each class are defined.
+
+---
+
+# Reflection questions
+
+# What was your overall approach to tackling this project?
+My overall approach was to break the project into smaller, manageable chunks by identifying the core elements of the game 
+(locations, choices, puzzles) and designing classes for them. I started with a clear architecture diagram to visualize the 
+relationships between these components and iteratively implemented and tested each feature.
+
+# What new thing(s) did you learn / figure out in completing this project?
+I learned how to effectively use Java collections like `List` and `Map` to manage game data. I also gained a deeper understanding 
+of how to design object-oriented systems which makes sure new features can be added without modifying existing code.
+
+# Is there anything that you wish you had implemented differently?
+I wish I had implemented a better system for handling user input like as a command parser that could handle more complex 
+commands or provide better error messages. This would have made the game more user-friendly and reduced the risk of invalid inputs.
+
+# If you had unlimited time, what additional features would you implement?
+If I had unlimited time, I would implement the following features:
+- A save/load system to allow players to save their progress and resume later.
+- A skip button for puzzles that users cannot figure out.
+- More games in the game - not just riddles!.
+- Additional storylines and branching paths.
+
+# What was the most helpful piece of feedback you received while working on your project?
+The most helpful feedback I received was for managing the relationships between locations, choices, and puzzles in a way that avoids 
+circular dependencies. For example, I was having trouble ensuring that each Choice correctly linked to a valid Location and that 
+puzzles are only accessible at the appropriate locations could become challenging as the game grows.
+
+During one of our first project reviews, I talked with my seatmates in the back row and they helped me figure out that I could 
+implement a validation system during the initialization phase of the game. This system would iterate through all `Choice` objects 
+and verify that their `nextLocation` property corresponds to a valid `Location` in the game. Similarly, it would check that all 
+puzzles in the `puzzles` map are associated with valid locations. By catching these issues early, I could prevent runtime errors and 
+ensure the integrity of the game world. Additionally, using a centralized configuration file or database to define the relationships 
+between locations, choices, and puzzles could simplify the initialization process and make the game easier to expand in the future.
+
+### If you could go back in time and give your past self some advice about this project, what hints would you give?
+I would tell my past self to start with a detailed plan and architecture diagram before writing any code. This would have saved time spent refactoring and ensured that the design was solid from the beginning. I would also advise testing each component thoroughly as it is implemented to catch bugs early.
+
+### If you worked with a team: please comment on how your team dynamics influenced your experience working on this project.
+I worked on this project individually, so team dynamics were not a factor. However, I can imagine that working with a team would have required clear communication and division of responsibilities to ensure smooth collaboration.
