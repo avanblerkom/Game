@@ -32,7 +32,13 @@ public class Puzzle {
     }
 
     public boolean isCorrect(String answer) {
-        return solution.contains(answer.toLowerCase().trim());
+        String normalizedAnswer = answer.toLowerCase().trim();
+        for (String solution : solution) {
+            if (solution.toLowerCase().trim().equals(normalizedAnswer)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

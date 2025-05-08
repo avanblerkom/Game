@@ -1,0 +1,123 @@
+Cheatsheet
+
+# Map of Locations and Connections
+
+                [Mountain Peak]
+                     |
+                     v
+           [Mountain Path] <--> [Clearing] <--> [Deep Forest]
+                     ^                     |
+                     |                     v
+                [Upstream] <--> [River] <--> [Pond/Start]
+                     |                     |
+                     v                     v
+          [Find Key] <--> [Gather Materials] <--> [Build Dam]
+                     |                     |
+                     v                     v
+          [Talk Sprayoncé] <--> [Gather with Sprayoncé]
+
+Location Details
+
+- Start:  
+  Story: You are Justin the Beaver, standing at the edge of a still pond.  
+  Choices:  
+    - Explore the forest → Forest  
+    - Gather materials for the dam by the river → River  
+    - Build the dam here at the pond → Build Dam  
+
+- Forest:  
+  Story: You are in a dense forest. The trees tower above you.  
+  Choices:  
+    - Go south back to the pond → Start  
+    - Go deeper into the forest → Deep Forest  
+    - Go east to the river → River  
+    - Talk to Sprayoncé the skunk → Talk Sprayoncé  
+
+- River:  
+  *Story*: You are by a rushing river.  
+  *Choices*:  
+    - Go west back to the pond → Start  
+    - Follow the river upstream → Upstream  
+
+- Deep Forest:  
+  Story: You venture deeper into the forest.  
+  Choices:  
+    - Go back to the forest → Forest  
+    - Go to the clearing → Clearing  
+
+- Upstream:  
+  Story: You follow the river upstream and find a small waterfall.  
+  Choices:  
+    - Search the area for something useful → Find Key  
+    - Go downstream back to the river → River  
+
+- Clearing:  
+  Story: You find a sunny clearing scattered with sticks.  
+  Choices:  
+    - Go back to the deep forest → Deep Forest  
+    - Go to the mountain path → Mountain Path  
+
+- Mountain Path:  
+  Story: You are on a rocky mountain path.  
+  Choices:  
+    - Climb higher to the mountain peak → Mountain Peak  
+    - Go back to the clearing → Clearing  
+    - Go back to upstream → Upstream  
+
+- Mountain Peak:  
+  Story: You reach the mountain peak.  
+  Choices:  
+    - Open the chest → Open Chest  
+    - Descend back to the mountain path → Mountain Path  
+    - Go to the clearing → Clearing  
+
+- Build Dam:  
+  Story: You successfully gather materials and start building your dam.  
+  Choices:  
+    - Use the sticks to complete the dam → Dam Complete  
+    - Search for more materials → Gather Materials  
+
+- Dam Complete:  
+  Story: Congratulations! You have completed your dam and created a thriving lodge for your beaver family.  
+  Choices: None  
+
+- Find Key:  
+  Story: You search the area and find a shiny golden key hidden under some rocks.  
+  Choices:  
+    - Go downstream back to the river → River  
+
+- Gather Materials:  
+  Story: You gather materials by the river.  
+  Choices:  
+    - Go back to the river → River  
+    - Investigate a shiny object → Find Key  
+
+- Talk Sprayoncé:  
+  Story: Sprayoncé offers to help you gather some sticks.  
+  Choices:  
+    - Accept her help → Gather with Sprayoncé  
+    - Thank her and go back to the forest → Forest  
+
+- Gather with Sprayoncé:  
+  Story: Sprayoncé helps you gather materials for your dam.  
+  Choices:  
+    - Thank Sprayoncé and start building the dam → Build Dam  
+    - Explore the area further → Forest  
+
+  Puzzles
+
+1. Deep Forest:  
+   Riddle: What has keys but can't open locks?  
+   *Solution*: A piano  
+
+2. Upstream:  
+   Riddle: I am a solitary word, 5 letters long. Behead me once, I am the same. Behead me again, I am still the same. What word am I?  
+   Solution: Alone  
+
+3. Clearing:  
+   Riddle: I have a head, but no brain. I have a body, but no heart. I have a base, but no feet. What am I?  
+   Solution: A stick  
+
+4. River:  
+   Riddle: What can run but never walks, has a mouth but never talks, has a head but never weeps, has a bed but never sleeps?  
+   Solution: A river
